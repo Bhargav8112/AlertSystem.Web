@@ -1,0 +1,33 @@
+﻿@*@model AlertSystem.Models.PagedResult<AlertSystem.Models.ProductionSystemNameViewModel>
+
+
+@{
+    ViewBag.Title = "Index";
+}
+
+
+<table>
+    <thead>
+        <tr>
+            <th>SystemNum</th>
+        </tr>
+    </thead>
+    @foreach (var item in Model.Items)
+    {
+        <tr>
+            <td>@item.systemname</td>
+        </tr>
+    }
+</table>
+
+<div>
+    Page @(Model.PageNumber) of @(Model.TotalPages)
+    @if (Model.PageNumber > 1)
+    {
+        @Html.ActionLink("Previous", "Index", new { page = Model.PageNumber - 1 })
+    }
+    @if (Model.PageNumber < Model.TotalPages)
+    {
+        @Html.ActionLink("Next", "Index", new { page = Model.PageNumber + 1 })
+    }
+</div>*@

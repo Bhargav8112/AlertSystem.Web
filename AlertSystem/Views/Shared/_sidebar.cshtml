@@ -1,0 +1,97 @@
+﻿<!-- ========== App Menu ========== -->
+<div class="app-menu navbar-menu">
+    <!-- LOGO -->
+    <div class="navbar-brand-box">
+        <a href="@Url.Action("CRM", "Dashboard")" class="logo logo-dark">
+            <span class="logo-sm">
+                <img src="~/assets/images/sswnew.png" alt="" height="50">
+            </span>
+            <span class="logo-lg">
+                <img src="~/assets/images/sswnew.png" alt="" height="45" />
+                <label style="color:white">
+                    S.S. White Technologies
+                </label>
+            </span>
+        </a>
+        <a href="@Url.Action("CRM", "Dashboard")" class="logo logo-light">
+            <span class="logo-sm">
+                <img src="~/assets/images/sswnew.png" alt="" height="50">
+            </span>
+            <span class="logo-lg">
+                <img src="~/assets/images/sswnew.png" alt="" height="45" />
+                <label style="color:white">
+                    S.S. White Technologies
+                </label>
+            </span>
+        </a>
+        <button type="button" class="btn btn-sm p-0 fs-20 header-item float-end btn-vertical-sm-hover" id="vertical-hover">
+            <i class="ri-record-circle-line"></i>
+        </button>
+    </div>
+
+    <div id="scrollbar">
+        <div class="container-fluid">
+
+            <div id="two-column-menu">
+            </div>
+            <ul class="navbar-nav" id="navbar-nav">
+                <li class="menu-title"><span data-key="t-menu">Menu</span></li>
+
+
+
+                @*<li class="nav-item">
+                        <a class="nav-link menu-link" href="#sidebarAdvanceUI" data-bs-toggle="collapse" role="button"
+                           aria-expanded="false" aria-controls="sidebarAdvanceUI">
+                            <i class="ri-stack-line"></i> <span data-key="t-advance-ui">Advance UI</span>
+                            <span class="badge badge-pill bg-success" data-key="t-new">New</span>
+                        </a>
+                        <div class="collapse menu-dropdown" id="sidebarAdvanceUI">
+                            <ul class="nav nav-sm flex-column">
+                                <li class="nav-item">
+                                    <a href="@Url.Action("SweetAlerts", "AdvanceUI")" class="nav-link" data-key="t-sweet-alerts">Sweet Alerts</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="@Url.Action("NestableList", "AdvanceUI")" class="nav-link" data-key="t-nestable-list">Nestable List</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="@Url.Action("Scrollbar", "AdvanceUI")" class="nav-link" data-key="t-scrollbar">Scrollbar</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="@Url.Action("Animation", "AdvanceUI")" class="nav-link" data-key="t-animation">Animation</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="@Url.Action("Tour", "AdvanceUI")" class="nav-link" data-key="t-tour">Tour</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="@Url.Action("SwiperSlider", "AdvanceUI")" class="nav-link" data-key="t-swiper-slider">Swiper Slider</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="@Url.Action("Ratings", "AdvanceUI")" class="nav-link" data-key="t-ratings">Ratings</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="@Url.Action("Highlight", "AdvanceUI")" class="nav-link" data-key="t-highlight">Highlight</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="@Url.Action("ScrollSpy", "AdvanceUI")" class="nav-link" data-key="t-scrollSpy">ScrollSpy</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>*@
+
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="@Url.Action("Index", "Home")">
+                        <i class="ri-honour-line"></i> <span data-key="t-widgets">Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="@Url.Action("Index", "Alert")">
+                        <i class="ri-honour-line"></i> <span data-key="t-widgets">Test</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <!-- Sidebar -->
+    </div>
+    <div class="sidebar-background"></div>
+</div>
+<div class="vertical-overlay"></div>

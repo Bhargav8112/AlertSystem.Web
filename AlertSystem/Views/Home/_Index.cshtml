@@ -1,0 +1,101 @@
+﻿@model AlertSystem.Models.HomeModel<AlertSystem.Models.PartSummaryViewModel>
+
+@{
+    ViewBag.Title = "_Index";
+}
+@{
+    int count = ((Model.PageNumber - 1) * Model.PageSize) + 1;
+}
+<div class="card">
+    <div class="card-body">
+        <table id="model-datatables" class="table table-bordered nowrap table-striped align-middle" style="width:100%">
+            <thead class="table-light">
+                <tr>
+                    <th>Sr. No.</th>
+                    <th>Part Num</th>
+                    <th>Yearly Qty Should -   <span class="badge   text-bg-secondary"><i class="mdi mdi-circle-medium"></i> @Model.SumYearlyQty</span></th>
+                    <th>FL On Hand Qty -  <span class="badge  text-bg-secondary"><i class="mdi mdi-circle-medium"></i> @Model.SumOnHandQtyFL</span></th>
+                    <th>Cycle Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Items != null)
+                {
+                    foreach (var item in Model.Items)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => count)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.PartNum)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TotalYearlyQty)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TotalOnHandQtyFL)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TotalCycleTime)
+                            </td>
+                        </tr>
+                        count++;
+                    }
+                }
+            </tbody>
+        </table>
+
+        <div class="d-flex justify-content-between align-items-center mt-3">
+
+            @{
+                var startRecord = ((Model.PageNumber - 1) * Model.PageSize) + 1;
+                var endRecord = Math.Min(Model.PageNumber * Model.PageSize, Model.TotalItems);
+            }
+            <p class="col-lg-9">
+                Showing @startRecord to @endRecord of @Model.TotalItems entries
+            </p>
+            @if (Model.PageNumber > 1)
+            {
+                @Html.ActionLink("Previous", "Index", new { page = Model.PageNumber - 1 }, new { @class = "btn btn-light" })
+            }
+            @for (int i = 1; i <= Math.Min(3, Model.TotalPages); i++)
+            {
+                if (i == Model.PageNumber)
+                {
+                    <span class="btn btn-primary">@i</span>
+                }
+                else
+                {
+                    @Html.ActionLink(i.ToString(), "Index", new { page = i }, new { @class = "btn btn-light" })
+                }
+            }
+            @if (Model.TotalPages > 5)
+            {
+                if (Model.PageNumber < Model.TotalPages - 2)
+                {
+                    <span class="btn disabled">...</span>
+                }
+
+                for (int i = Model.TotalPages - 1; i <= Model.TotalPages; i++)
+                {
+                    if (i > 3)
+                    {
+                        if (i == Model.PageNumber)
+                        {
+                            <span class="btn btn-primary">@i</span>
+                        }
+                        else
+                        {
+                            @Html.ActionLink(i.ToString(), "Index", new { page = i }, new { @class = "btn btn-light" })
+                        }
+                    }
+                }
+            }
+            @if (Model.PageNumber < Model.TotalPages)
+            {
+                @Html.ActionLink("Next", "Index", new { page = Model.PageNumber + 1 }, new { @class = "btn btn-light" })
+            }
+        </div>
+    </div>
+</div>

@@ -1,0 +1,124 @@
+﻿@model AlertSystem.Models.LoginModel
+@{
+    ViewBag.Title = "Sign Up";
+    Layout = null;
+}
+
+<!doctype html>
+<html lang="en" data-layout="vertical" data-topbar="light" data-sidebar="ladylip" data-sidebar-size="lg">
+<head>
+    @Html.Partial("~/Views/Shared/_title_meta.cshtml")
+    @Html.Partial("~/Views/Shared/_head_css.cshtml")
+</head>
+<body>
+    <style>
+        .auth-bg-cover {
+            background: linear-gradient(-45deg, #405189 50%, #198754);
+        }
+    </style>
+    <div class="auth-page-wrapper auth-bg-cover py-5 d-flex justify-content-center align-items-center min-vh-100">
+        <div class="bg-overlay"></div>
+        <div class="auth-page-content overflow-hidden pt-lg-5">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card overflow-hidden m-0">
+                            <div class="row justify-content-center g-0">
+                                <div class="col-lg-6">
+                                    <div class="p-lg-5 p-4 auth-one-bg h-100">
+                                        <div class="bg-overlay"></div>
+                                        <div class="position-relative h-100 d-flex flex-column">
+                                            <div class="mb-4">
+                                                <h3 style="color:white">S.S. White Technologies India PVT. LTD.</h3>
+                                            </div>
+                                            <div class="mt-auto">
+                                                <div id="qoutescarouselIndicators" class="carousel slide" data-bs-ride="carousel">
+                                                    <div class="carousel-indicators">
+                                                        <button type="button" data-bs-target="#qoutescarouselIndicators" data-bs-slide-to="0" class="active"
+                                                                aria-current="true" aria-label="Slide 1"></button>
+                                                        <button type="button" data-bs-target="#qoutescarouselIndicators" data-bs-slide-to="1"
+                                                                aria-label="Slide 2"></button>
+                                                        <button type="button" data-bs-target="#qoutescarouselIndicators" data-bs-slide-to="2"
+                                                                aria-label="Slide 3"></button>
+                                                    </div>
+                                                    <div class="carousel-inner text-center text-white-50 pb-5">
+                                                        <div class="carousel-item active">
+                                                            <p class="fs-15 fst-italic">" Meetings that matter start with a great booking."</p>
+                                                        </div>
+                                                        <div class="carousel-item">
+                                                            <p class="fs-15 fst-italic">" Reserve your space, and let the ideas flow."</p>
+                                                        </div>
+                                                        <div class="carousel-item">
+                                                            <p class="fs-15 fst-italic">" Every great meeting begins with a perfect space. "</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="p-lg-5 p-4">
+                                        <div>
+                                            <h5 class="text-primary">Alert System</h5>
+                                        </div>
+
+                                        <div class="mt-4">
+                                            @using (Html.BeginForm("Login", "Account", FormMethod.Post))
+                                            {
+                                                <div class="mb-3">
+                                                    @Html.LabelFor(model => model.UserName, new { @class = "form-label" })
+                                                    <div class="position-relative auth-pass-inputgroup mb-3">
+                                                        @Html.TextBoxFor(model => model.UserName, new { @class = "form-control pe-5 password-input", @placeholder = "Enter username", id = "username" })
+                                                        @Html.ValidationMessageFor(model => Model.UserName, "", new { @class = "text-danger" })
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3">
+                                                    @Html.LabelFor(model => model.Password, new { @class = "form-label", @for = "password-input" })
+                                                    <div class="position-relative auth-pass-inputgroup mb-3">
+                                                        @Html.PasswordFor(model => model.Password, new { @class = "form-control pe-5 password-input", @placeholder = "Enter password", id = "password-input" })
+                                                        @Html.ValidationMessageFor(model => Model.Password, "", new { @class = "text-danger" })
+                                                    </div>
+                                                </div>
+                                                <div class="mt-4">
+                                                    <button class="btn btn-success w-100" type="submit">Sign In</button>
+                                                </div>
+                                                <div class="mt-4 text-center">
+                                                    <div class="signin-other-title">
+                                                    </div>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <footer class="footer">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="text-center">
+                            <p class="mb-0">
+                                &copy;
+                                <script>document.write(new Date().getFullYear())</script> s s white Crafted with <i class="mdi mdi-heart text-danger"></i> by S S White
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <!-- end Footer -->
+    </div>
+    <!-- end auth-page-wrapper -->
+    @Html.Partial("~/Views/Shared/_vendor_scripts.cshtml")
+
+    <!-- validation init -->
+    <script src="~/assets/js/pages/form-validation.init.js"></script>
+    <!-- password create init -->
+    <script src="~/assets/js/pages/passowrd-create.init.js"></script>
+
+</body>
+</html>
