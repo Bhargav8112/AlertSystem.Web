@@ -4304,6 +4304,7 @@
     <Content Include="Views\Home\SubIndex.cshtml" />
     <Content Include="Views\Alert\Index.cshtml" />
     <Content Include="Views\Home\_Index.cshtml" />
+    <Content Include="Views\Home\_PriorityModelPopup.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

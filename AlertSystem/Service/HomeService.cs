@@ -31,5 +31,27 @@ namespace AlertSystem.Controllers
             return null;
         }
 
+
+        public List<GetSystwmModel> GetSystempartyearcycle(string systemname)
+        {
+            try
+            {
+                return DB.Production_System_Name.Where(p => string.IsNullOrEmpty(systemname) || p.SystemNum == systemname)
+                      .Select(p => new GetSystwmModel
+                      {
+                          PartNum = p.PartNum,
+                          Yearly_Qty = p.Yearly_Qty,
+                          Cycle_Time = p.Cycle_Time
+                      })
+                      .Distinct()
+                      .ToList();
+            }
+            catch (Exception ex)
+            {
+                logService.AddLog(ex, "GetSystempartyearcycle", "HomeService");
+
+            }
+            return null;
+        }
     }
 }

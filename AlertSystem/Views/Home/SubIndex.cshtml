@@ -5,7 +5,21 @@
 }
 @{
     int count = ((Model.PageNumber - 1) * Model.PageSize) + 1;
-}<div class="">
+}
+@section styles{
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!--datatable css-->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" />
+    <!--datatable responsive css-->
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap.min.css" />
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css">
+
+}
+<div class="">
     <div class="card">
         <div class="card-body">
             <div class="row g-3">
@@ -34,15 +48,21 @@
                     <div class="row">
                         <div class="col-xl-12">
                             <div class="form-check form-check-inline me-3">
-                                <input type="radio" class="form-check-input" id="rbtnOnHandQty" name="filterOption" value="onHandQty" onclick="filterOption('onHandQty')" />
+                                <input type="radio" class="form-check-input" id="rbtnOnHandQty" name="filterOption"
+                                       value="onHandQty" onclick="filterOption('onHandQty')"
+                                       @(Model.FilterName == "onHandQty" ? "checked" : "") />
                                 <label class="form-check-label" for="rbtnOnHandQty">On Hand Qty</label>
                             </div>
                             <div class="form-check form-check-inline me-3">
-                                <input type="radio" class="form-check-input" id="rbtnSTKtoCUS" name="filterOption" value="stkToCus" onclick="filterOption('stkToCus')" />
+                                <input type="radio" class="form-check-input" id="rbtnSTKtoCUS" name="filterOption"
+                                       value="stkToCus" onclick="filterOption('stkToCus')"
+                                       @(Model.FilterName == "stkToCus" ? "checked" : "") />
                                 <label class="form-check-label" for="rbtnSTKtoCUS">STK-CUS</label>
                             </div>
                             <div class="form-check form-check-inline me-3">
-                                <input type="radio" class="form-check-input" id="rbtnCycleTime" name="filterOption" value="cycleTime" onclick="filterOption('cycleTime')" />
+                                <input type="radio" class="form-check-input" id="rbtnCycleTime" name="filterOption"
+                                       value="cycleTime" onclick="filterOption('cycleTime')"
+                                       @(Model.FilterName == "cycleTime" ? "checked" : "") />
                                 <label class="form-check-label" for="rbtnCycleTime">Cycle Time</label>
                             </div>
                         </div>
@@ -80,7 +100,7 @@
                                     <tr>
                                         <td>
                                             @Html.DisplayFor(modelItem => count)
-                                        </td> 
+                                        </td>
                                         <td>
                                             @Html.DisplayFor(modelItem => item.PartNum)
                                         </td>
@@ -97,6 +117,7 @@
                                             <b class="btn btn-outline-warning"> @Html.DisplayFor(modelItem => item.PriorityRank)</b>
                                         </td>
                                     </tr>
+                                    count++;
                                 }
                             }
                         </tbody>
@@ -113,7 +134,7 @@
                             </p>
                             @if (Model.PageNumber > 1)
                             {
-                                @Html.ActionLink("Previous", "OnhandstkcycleFilter", new { page = Model.PageNumber - 1 }, new { @class = "btn btn-light" })
+                                @Html.ActionLink("Previous", "OnhandstkcycleFilter", new { selectvalue = Model.FilterName, slectsystem = Model.Systemname, page = Model.PageNumber - 1 }, new { @class = "btn btn-light" })
                             }
                             @for (int i = 1; i <= Math.Min(3, Model.TotalPages); i++)
                             {
@@ -123,7 +144,7 @@
                                 }
                                 else
                                 {
-                                    @Html.ActionLink(i.ToString(), "OnhandstkcycleFilter", new { page = i }, new { @class = "btn btn-light" })
+                                    @Html.ActionLink(i.ToString(), "OnhandstkcycleFilter", new { selectvalue = Model.FilterName, slectsystem = Model.Systemname, page = i }, new { @class = "btn btn-light" })
                                 }
                             }
                             @if (Model.TotalPages > 5)
@@ -143,14 +164,14 @@
                                         }
                                         else
                                         {
-                                            @Html.ActionLink(i.ToString(), "OnhandstkcycleFilter", new { page = i }, new { @class = "btn btn-light" })
+                                            @Html.ActionLink(i.ToString(), "OnhandstkcycleFilter", new { selectvalue = Model.FilterName, slectsystem = Model.Systemname, page = i }, new { @class = "btn btn-light" })
                                         }
                                     }
                                 }
                             }
                             @if (Model.PageNumber < Model.TotalPages)
                             {
-                                @Html.ActionLink("Next", "OnhandstkcycleFilter", new { page = Model.PageNumber + 1 }, new { @class = "btn btn-light" })
+                                @Html.ActionLink("Next", "OnhandstkcycleFilter", new { selectvalue = Model.FilterName, slectsystem = Model.Systemname, page = Model.PageNumber + 1 }, new { @class = "btn btn-light" })
                             }
                         </div>
                     }
@@ -178,8 +199,8 @@
                                 {
                                     <tr>
                                         <td>
-                                            <button class="clickable-priority btn btn-outline-primary btn-sm fw-bold" onclick="Prioritymodel()"
-                                                    data-priority="@item.Priority" style="border-radius: 10px; padding: 5px 12px; font-size: 14px;">
+                                            <button type="button" class=" btn btn-outline-primary btn-sm fw-bold" onclick="ShowPrioritymodel()"
+                                                    style="border-radius: 10px; padding: 5px 12px; font-size: 14px;">
                                                 @item.Priority
                                             </button>
                                         </td>
@@ -193,4 +214,60 @@
             </div>
         </div>
     </div>
+    <div id="PrioriymodePopuplID">
+        @Html.Partial("_PriorityModelPopup", Model)
+    </div>
 </div>
+
+@section scripts{
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <!--datatable js-->
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.print.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+
+    <script src="~/assets/js/pages/datatables.init.js"></script>
+
+    <script src="~/assets/js/pages/select2.init.js"></script>
+    <script src="~/assets/js/app.js"></script>
+    <script>
+
+        function ShowPrioritymodel() {
+            debugger
+              $('#priorityModal').modal('show');
+            var selectvalue = null;
+             var url = '@Url.Action("GetPriorityModelData", "Home")';
+                 $.ajax({
+                 url: url,
+                 type: 'GET',
+                 data: { selectvalue: selectvalue},
+                     success: function (response) {
+                          $('#PrioriymodePopuplID').html(response);
+                         $('#PrioritymodelID').modal('show');
+                     },
+
+                  });
+
+        }
+    </script>
+    <script>
+        function filterBySystem(selectedSystem) {
+            var url = '@Url.Action("Index", "Home")';
+                $.ajax({
+                url: url,
+                type: 'GET',
+                data: { selectedSystem: selectedValue },
+                success: function (response) {
+                window.location.href = url + '?selectedSystem=' + encodeURIComponent(selectedValue);
+                },
+            });
+        }
+    </script>
+}

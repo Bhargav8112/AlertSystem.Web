@@ -13,6 +13,7 @@ namespace AlertSystem.Models
         public int TotalItems { get; set; }
         public List<GetSystwmModel> SystemnameList { get; set; }
         public string Systemname { get; set; }
+        public string FilterName { get; set; }
 
         public int TotalPages => (int)Math.Ceiling((decimal)TotalItems / PageSize);
 
@@ -59,10 +60,16 @@ namespace AlertSystem.Models
         public string TranType { get; set; }
         public decimal TotalTranQty { get; set; }
         public int OnHandQty { get; set; }
-        public int YearlyQty { get; set; }
+        public decimal YearlyQty { get; set; }
+        public decimal WeeklyQty { get; set; }
+        public decimal MonthlyQty { get; set; }
         public decimal CycleTime { get; set; }
         public double MonthsInStock { get; set; }
         public int PriorityRank { get; set; }
+        public decimal Priority_Score { get; set; }
+        public double prioritymonth { get; set; }
+        public decimal WeeklyUsagePercentage { get; set; }
+
     }
 
     public class PrioritySummary
