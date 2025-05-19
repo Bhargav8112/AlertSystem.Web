@@ -31,6 +31,11 @@
             text-decoration: none;
         }
 </style>
+
+<div id="loadingGif" style="display:none; text-align: center;">
+    <img src="~/Content/images/loading.gif" alt="Loading..." />
+</div>
+
 <div id="dropdownandradiodiv">
     <div class="card">
         <div class="card-body">
@@ -87,43 +92,6 @@
     @Html.Partial("SubIndex", Model)
 </div>
 
-<!--<div class="row">
-    <div class="col-xl-12">
-        <div class="card crm-widget">
-            <div class="card-body p-0">
-                <div class="row">
-                    <center>
-                        <br />
-                        <h2> Shukla Medical Systems</h2>
-                    </center>
-                    <div class="form-group col-lg-6">
-                        <label for="selectedSystem">Select System</label>
-                        <select class="form-control" id="selectedSystem" name="selectedSystem">
-                            <option value="">-- Select System --</option>
-
-                        </select>
-                    </div>-->
-@*<div class="col-md-12" style="margin-left:20px;">
-        <input type="checkbox" name="system" class="form-check-input" value="ALL" checked>
-        @foreach (var item in Model)
-        {
-            <div class="form-check d-inline-block me-3">
-                <input class="form-check-input" type="checkbox"
-                       name="selectedSystems"
-                       value="@item.SystemNum"
-                       id="chk_@item.SystemNum" />
-                <label class="form-check-label" for="chk_@item.SystemNum">
-                    @item.SystemNum
-                </label>
-            </div>
-        }
-        <br />
-    </div>*@
-<!--</div>
-            </div>
-        </div>
-    </div>
-</div>-->
 
 @section scripts{
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
