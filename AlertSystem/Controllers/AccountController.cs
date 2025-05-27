@@ -24,7 +24,7 @@ namespace AlertSystem.Controllers
         public ActionResult Login(LoginModel _Model)
         {
             string username = _Model.UserName;
-            string password = _Model.Password;
+            string password = _Model.Password; 
             try
             {
                 USER_MST _user = DB.USER_MST.FirstOrDefault(p => p.TenentID == 10 && p.PASSWORD_CHNG == password && p.LOGIN_ID.Contains(username));
