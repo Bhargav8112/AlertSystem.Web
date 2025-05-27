@@ -1,5 +1,5 @@
 ﻿<!doctype html>
-<html lang="en" data-layout="vertical" data-topbar="light" data-sidebar="dark" data-sidebar-size="lg">
+<html lang="en" data-layout="horizontal" data-topbar="light" data-sidebar="dark" data-sidebar-size="lg">
 <head>
     @Html.Partial("~/Views/Shared/_title_meta.cshtml")
     @RenderSection("styles", required: false)
@@ -16,7 +16,7 @@
         <div class="main-content">
 
             <div class="page-content">
-                <div class="container-fluid">
+                <div class="">
                     @Html.Partial("~/Views/Shared/_page_title.cshtml")
 
                     @RenderBody()

@@ -66,72 +66,78 @@
 
 
 <div id="dropdownandradiodiv">
-    <div class="card">
-        <div class="card-body">
-            <div class="row g-3">
-                <br />
-                <center><h2> Shukla Medical Systems</h2></center>
-
-                <div class="">
-                    <input type="hidden" id="dropdwonvalue" value="@Model.Systemname" />
-                    <div id="systemCheckboxList" style="display: flex; flex-wrap: wrap; gap: 15px;">
-                        <div class="form-check">
-                            <input type="checkbox"
-                                   class="form-check-input system-checkbox"
-                                   id="system_all"
-                                   name="selectedSystems"
-                                   value=""
-                                   @(Model.Systemname == null ? "checked" : "")
-                                   onchange="filterBySystem(null)">
-                            <label class="form-check-label" for="system_all">ALL</label>
-                        </div>
-                        @foreach (var item in Model.SystemnameList)
-                        {
+    <div class="">
+        <div class="row">
+            <!-- Sidebar (like Myntra filters) -->
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="mb-3">System Filter</h5>
+                        <input type="hidden" id="dropdwonvalue" value="@Model.Systemname" />
+                        <div id="systemCheckboxList" style="display: flex; flex-direction: column; gap: 10px;">
                             <div class="form-check">
                                 <input type="checkbox"
                                        class="form-check-input system-checkbox"
-                                       id="system_@item.SystemNum"
+                                       id="system_all"
                                        name="selectedSystems"
-                                       value="@item.SystemNum"
-                                       @(Model.Systemname == item.SystemNum ? "checked" : "")
-                                       onchange="filterBySystem(this.value)">
-                                <label class="form-check-label" for="system_@item.SystemNum">@item.SystemNum</label>
+                                       value=""
+                                       @(Model.Systemname == null ? "checked" : "")
+                                       onchange="filterBySystem(null)">
+                                <label class="form-check-label" for="system_all">ALL</label>
                             </div>
-                        }
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="card">
-        <div class="card-body">
-            <div id="radioButtons" class="mt-3">
-                <div class="row">
-                    <div class="col-xl-12">
-                        <div class="form-check form-check-inline me-3">
-                            <input type="radio" class="form-check-input" id="rbtnOnHandQty" name="filterOption" value="onHandQty" onclick="filterOption('onHandQty')" />
-                            <label class="form-check-label" for="rbtnOnHandQty">On Hand Qty</label>
-                        </div>
-                        <div class="form-check form-check-inline me-3">
-                            <input type="radio" class="form-check-input" id="rbtnSTKtoCUS" name="filterOption" value="stkToCus" onclick="filterOption('stkToCus')" />
-                            <label class="form-check-label" for="rbtnSTKtoCUS">STK-CUS</label>
-                        </div>
-                        <div class="form-check form-check-inline me-3">
-                            <input type="radio" class="form-check-input" id="rbtnCycleTime" name="filterOption" value="cycleTime" onclick="filterOption('cycleTime')" />
-                            <label class="form-check-label" for="rbtnCycleTime">Cycle Time</label>
+                            @foreach (var item in Model.SystemnameList)
+                            {
+                                <div class="form-check">
+                                    <input type="checkbox"
+                                           class="form-check-input system-checkbox"
+                                           id="system_@item.SystemNum"
+                                           name="selectedSystems"
+                                           value="@item.SystemNum"
+                                           @(Model.Systemname == item.SystemNum ? "checked" : "")
+                                           onchange="filterBySystem(this.value)">
+                                    <label class="form-check-label" for="system_@item.SystemNum">@item.SystemNum</label>
+                                </div>
+                            }
                         </div>
                     </div>
                 </div>
             </div>
+
+            <!-- Main content -->
+            <div class="col-md-9">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div id="radioButtons" class="mt-3">
+                            <div class="row">
+                                <div class="col-xl-12">
+                                    <div class="form-check form-check-inline me-3">
+                                        <input type="radio" class="form-check-input" id="rbtnOnHandQty" name="filterOption" value="onHandQty" onclick="filterOption('onHandQty')" />
+                                        <label class="form-check-label" for="rbtnOnHandQty">On Hand Qty</label>
+                                    </div>
+                                    <div class="form-check form-check-inline me-3">
+                                        <input type="radio" class="form-check-input" id="rbtnSTKtoCUS" name="filterOption" value="stkToCus" onclick="filterOption('stkToCus')" />
+                                        <label class="form-check-label" for="rbtnSTKtoCUS">STK-CUS</label>
+                                    </div>
+                                    <div class="form-check form-check-inline me-3">
+                                        <input type="radio" class="form-check-input" id="rbtnCycleTime" name="filterOption" value="cycleTime" onclick="filterOption('cycleTime')" />
+                                        <label class="form-check-label" for="rbtnCycleTime">Cycle Time</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="Maintabledata">
+                    @Html.Partial("_Index", Model)
+                </div>
+                <div id="filterwisedata" style="display:none">
+                    @Html.Partial("SubIndex", Model)
+                </div>
+            </div>
         </div>
     </div>
-</div>
-<div id="Maintabledata">
-    @Html.Partial("_Index", Model)
-</div>
-<div id="filterwisedata" style="display:none">
-    @Html.Partial("SubIndex", Model)
-</div>
+    </div>
 
 
 @section scripts{
