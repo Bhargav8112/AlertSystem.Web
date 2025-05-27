@@ -21,50 +21,62 @@
 }
 <div class="">
     <div class="card">
-        <div class="card-body">
-            <div class="row g-3">
-                <center>
+        <div class="card">
+            <div class="card-body">
+                <div class="row g-3">
                     <br />
-                    <h2> Shukla Medical Systems</h2>
-                    <div class="col-xl-4 col-md-6">
+                    <center><h2> Shukla Medical Systems</h2></center>
+
+                    <div class="">
                         <input type="hidden" id="dropdwonvalue" value="@Model.Systemname" />
-                        <select class="form-control js-example-basic-single" id="selectedSystem" name="selectedSystem" onchange="filterBySystem(this.value)">
-                            @if (Model.Systemname != null)
-                            {
-                                <option value="@Model.Systemname">@Model.Systemname</option>
-                            }
-                            else
-                            {
-                                <option value="">-- Select System --</option>
-                            }
+                        <div id="systemCheckboxList" style="display: flex; flex-wrap: wrap; gap: 15px;">
+                            <div class="form-check">
+                                <input type="checkbox"
+                                       class="form-check-input system-checkbox"
+                                       id="system_all"
+                                       name="selectedSystems"
+                                       value=""
+                                       @(Model.Systemname == null ? "checked" : "")
+                                       onchange="filterBySystem(null)">
+                                <label class="form-check-label" for="system_all">ALL</label>
+                            </div>
                             @foreach (var item in Model.SystemnameList)
                             {
-                                <option value="@item.SystemNum">@item.SystemNum</option>
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input system-checkbox" id="system_@item.SystemNum" name="selectedSystems" value="@item.SystemNum"
+                                           @(Model.Systemname == item.SystemNum ? "checked" : "")
+                                           onchange="filterBySystem(this.value)">
+                                    <label class="form-check-label" for="system_@item.SystemNum">@item.SystemNum</label>
+                                </div>
                             }
-                        </select>
+                        </div>
                     </div>
-                </center>
-                <div id="radioButtons" class="mt-3">
-                    <div class="row">
-                        <div class="col-xl-12">
-                            <div class="form-check form-check-inline me-3">
-                                <input type="radio" class="form-check-input" id="rbtnOnHandQty" name="filterOption"
-                                       value="onHandQty" onclick="filterOption('onHandQty')"
-                                       @(Model.FilterName == "onHandQty" ? "checked" : "") />
-                                <label class="form-check-label" for="rbtnOnHandQty">On Hand Qty</label>
-                            </div>
-                            <div class="form-check form-check-inline me-3">
-                                <input type="radio" class="form-check-input" id="rbtnSTKtoCUS" name="filterOption"
-                                       value="stkToCus" onclick="filterOption('stkToCus')"
-                                       @(Model.FilterName == "stkToCus" ? "checked" : "") />
-                                <label class="form-check-label" for="rbtnSTKtoCUS">STK-CUS</label>
-                            </div>
-                            <div class="form-check form-check-inline me-3">
-                                <input type="radio" class="form-check-input" id="rbtnCycleTime" name="filterOption"
-                                       value="cycleTime" onclick="filterOption('cycleTime')"
-                                       @(Model.FilterName == "cycleTime" ? "checked" : "") />
-                                <label class="form-check-label" for="rbtnCycleTime">Cycle Time</label>
-                            </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <div id="radioButtons" class="mt-3">
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="form-check form-check-inline me-3">
+                            <input type="radio" class="form-check-input" id="rbtnOnHandQty" name="filterOption"
+                                   value="onHandQty" onclick="filterOption('onHandQty')"
+                                   @(Model.FilterName == "onHandQty" ? "checked" : "") />
+                            <label class="form-check-label" for="rbtnOnHandQty">On Hand Qty</label>
+                        </div>
+                        <div class="form-check form-check-inline me-3">
+                            <input type="radio" class="form-check-input" id="rbtnSTKtoCUS" name="filterOption"
+                                   value="stkToCus" onclick="filterOption('stkToCus')"
+                                   @(Model.FilterName == "stkToCus" ? "checked" : "") />
+                            <label class="form-check-label" for="rbtnSTKtoCUS">STK-CUS</label>
+                        </div>
+                        <div class="form-check form-check-inline me-3">
+                            <input type="radio" class="form-check-input" id="rbtnCycleTime" name="filterOption"
+                                   value="cycleTime" onclick="filterOption('cycleTime')"
+                                   @(Model.FilterName == "cycleTime" ? "checked" : "") />
+                            <label class="form-check-label" for="rbtnCycleTime">Cycle Time</label>
                         </div>
                     </div>
                 </div>
@@ -77,7 +89,10 @@
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="card-title mb-0"><label id=""> Analysis based on High Cycle Time and Priority </label></h4>
+                    @{
+                        int TotalCount = Model.FilterSTKCUSList != null ? Model.FilterSTKCUSList.Count : 0;
+                    }
+                    <h4 class="card-title mb-0"><label id=""> Analysis based on @Model.FilterName </label></h4>
                 </div>
                 <div class="card-body">
                     <table id="" class="table table-bordered dt-responsive nowrap table-striped align-middle" style="width:100%">
@@ -86,10 +101,21 @@
                                 <th>Sr No.</th>
                                 <th>Part Num</th>
                                 <th>Yearly Qty Should</th>
-                                <th>FL On Hand Qty</th>
+                                @if (@Model.FilterName == "stkToCus")
+                                {
+                                    <th>Trans Qty</th>
+                                }
+                                else if (@Model.FilterName == "cycleTime")
+                                {
+                                    <th>FL On Hand Qty</th>
+                                    <th>Trans Qty</th>
+                                }
+                                else
+                                {
+                                    <th>Trans Qty</th>
+                                }
                                 <th>Cycle Time</th>
                                 <th> Priority</th>
-
                             </tr>
                         </thead>
                         <tbody>
@@ -107,9 +133,27 @@
                                         <td>
                                             @Html.DisplayFor(modelItem => item.YearlyQty)
                                         </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.OnHandQty)
-                                        </td>
+                                        @if (@Model.FilterName == "stkToCus")
+                                        {
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.TotalTranQty)
+                                            </td>
+                                        }
+                                        else if (@Model.FilterName == "cycleTime")
+                                        {
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.OnHandQty)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.TotalTranQty)
+                                                </td>
+                                        }
+                                        else
+                                        {
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.OnHandQty)
+                                            </td>
+                                        }
                                         <td>
                                             @Html.DisplayFor(modelItem => item.CycleTime)
                                         </td>
@@ -175,7 +219,6 @@
                             }
                         </div>
                     }
-
                 </div>
             </div>
         </div>
@@ -188,20 +231,19 @@
                     <table id="tbltotalpartforcycletime" class="table table-bordered dt-responsive nowrap table-striped align-middle" style="width:100%">
                         <thead>
                             <tr>
-                                <th>Priority</th>
+                                <th>Cycle Time Wise Priority</th>
                                 <th>Total Part</th>
                             </tr>
                         </thead>
                         <tbody>
                             @if (Model.FilterSTKCUSPriorityList != null)
                             {
+
                                 foreach (var item in Model.FilterSTKCUSPriorityList)
                                 {
                                     <tr>
                                         <td>
-                                            <button type="button" class=" btn btn-outline-primary btn-sm fw-bold" onclick="ShowPrioritymodel()"
-                                                    style="border-radius: 10px; padding: 5px 12px; font-size: 14px;">
-                                                @item.Priority
+                                            <button type="button" class="btn btn-outline-primary btn-sm fw-bold"onclick='ShowPrioritymodel(@Html.Raw(Json.Encode(item.TotalPartsList)))'>@item.Priority
                                             </button>
                                         </td>
                                         <td> @Html.DisplayFor(modelItem => item.TotalParts)</td>
@@ -241,20 +283,24 @@
 
         function ShowPrioritymodel() {
             debugger
-              $('#priorityModal').modal('show');
-            var selectvalue = null;
-             var url = '@Url.Action("GetPriorityModelData", "Home")';
-                 $.ajax({
-                 url: url,
-                 type: 'GET',
-                 data: { selectvalue: selectvalue},
-                     success: function (response) {
-                          $('#PrioriymodePopuplID').html(response);
-                         $('#PrioritymodelID').modal('show');
-                     },
-
-                  });
-
+           debugger
+                $("#loaderOverlay").show();
+                    $('#priorityModal').modal('show');
+                const raw = document.getElementById("partData").value;
+                const parts = JSON.parse(raw);
+                    var url = '@Url.Action("GetPriorityModelData", "Home")';
+                        $.ajax({
+                        url: url,
+                        type: 'GET',
+                            data: { selectvalue: systemname, partlist: parts },
+                            success: function (response) {
+                                $('#PrioriymodePopuplID').html(response);
+                                $('#PrioritymodelID').modal('show');
+                            },
+                            complete: function () {
+                                $("#loaderOverlay").hide();
+                            }
+                        });
         }
     </script>
     <script>

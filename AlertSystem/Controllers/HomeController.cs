@@ -29,6 +29,10 @@ namespace AlertSystem.Controllers
             try
             {
 
+                if (selectedSystem == "undefined" || selectedSystem == "" || selectedSystem == "null")
+                {
+                    selectedSystem = null;
+                }
                 List<GetSystwmModel> getSystwm = _homeService.GetSystemsName(null);
 
                 List<PartSummaryViewModel> PartWiseData = (from _model in DB.usp_GetPartSummary(selectedSystem)
@@ -148,7 +152,8 @@ namespace AlertSystem.Controllers
                     .Select(g => new PrioritySummary
                     {
                         Priority = g.Key,
-                        TotalParts = g.Count()
+                        TotalParts = g.Count(),
+                        TotalPartsList = g.Select(x => x.PartNum).ToList()
                     }).OrderBy(p=>p.Priority)
                     .ToList();
 
@@ -175,15 +180,18 @@ namespace AlertSystem.Controllers
             return View("SubIndex", _Hmodel);
         }
 
-        public ActionResult GetPriorityModelData(string selectedSystem)
+        public ActionResult GetPriorityModelData(string systemName, List<string> selectedPartNums)
         {
-            int pageSize = 20;
+            if (systemName == "undefined" || systemName == "" || systemName == "null")
+            {
+                systemName = null;
+            }
             HomeModel<PartSummaryViewModel> _Hmodel = new HomeModel<PartSummaryViewModel>();
             List<FilterSTKCUSViewModel> _Model = new List<FilterSTKCUSViewModel>();
             try
             {
 
-                List<GetSystwmModel> getSystem = _homeService.GetSystempartyearcycle(selectedSystem);
+                List<GetSystwmModel> getSystem = _homeService.GetSystempartyearcycle(systemName);
 
                 List<string> partNumbers = getSystem.Select(p => p.PartNum).ToList();
 
@@ -216,8 +224,10 @@ namespace AlertSystem.Controllers
                         };
 
                     
-                })
-                .ToList();
+                }).Where(p => selectedPartNums.Contains(p.PartNum))
+                                        .OrderBy(p => p.PriorityRank)
+                                        .ThenByDescending(p => p.Priority_Score)
+                                        .ToList();
                 _Hmodel = new HomeModel<PartSummaryViewModel>
                 {
                     FilterSTKCUSList = _Model,
@@ -227,7 +237,7 @@ namespace AlertSystem.Controllers
             }
             catch (Exception ex)
             {
-                logService.AddLog(ex, "Index", "HomeController");
+                logService.AddLog(ex, "GetPriorityModelData", "HomeController");
             }
             return PartialView("_PriorityModelPopup", _Hmodel);
         }

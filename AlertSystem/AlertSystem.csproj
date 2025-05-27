@@ -633,6 +633,7 @@
     <Content Include="assets\images\landing\process-arrow-img.png" />
     <Content Include="assets\images\layouts\horizontal.png" />
     <Content Include="assets\images\layouts\vertical.png" />
+    <Content Include="assets\images\lodinggif.gif" />
     <Content Include="assets\images\logo-dark.png" />
     <Content Include="assets\images\logo-light.png" />
     <Content Include="assets\images\logo-sm-1.png" />

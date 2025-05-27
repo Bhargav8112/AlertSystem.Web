@@ -103,31 +103,39 @@ namespace AlertSystem.Controllers
             List<FilterSTKCUSViewModel> result = new List<FilterSTKCUSViewModel>();
             try
             {
-                result = getSystem.Select((GetSystwmModel part) =>
-                {
-                    TransactionSummary trans = transactionDetails
-                        .FirstOrDefault((TransactionSummary t) => t.PartNum == part.PartNum);
-                    int onHandQty = onHandQtyDict.ContainsKey(part.PartNum) ? onHandQtyDict[part.PartNum] : 0;
-                    double monthsInStock = (part.Yearly_Qty.GetValueOrDefault() > 0) ? onHandQty / ((double)part.Yearly_Qty.GetValueOrDefault() / 12) : 0;
-                    int rank = monthsInStock >= 12 ? 5 :
-                               monthsInStock >= 9 ? 4 :
-                               monthsInStock >= 6 ? 3 :
-                               monthsInStock >= 3 ? 2 : 1;
+                result = (from sys in getSystem
+                          join trans in transactionDetails
+                             on sys.PartNum equals trans.PartNum into transGroup
+                          from trans in transGroup.DefaultIfEmpty()
+                          let onHandQty = onHandQtyDict.ContainsKey(sys.PartNum) ? onHandQtyDict[sys.PartNum] : 0
+                          let yearlyQty = sys?.Yearly_Qty ?? 0
+                          let tranQty = trans?.TotalQty ?? 0
 
+                          let monthlyQty = (yearlyQty > 0) ? (double)yearlyQty / 12 : 0
+                          let weeklyQty = (yearlyQty > 0) ? (double)yearlyQty / 52 : 0
 
-                    return new FilterSTKCUSViewModel
-                    {
-                        PartNum = part.PartNum,
-                        Company = trans != null ? trans.Company : "SSW",
-                        TranType = trans != null ? trans.TranType : "N/A",
-                        TotalTranQty = trans != null ? trans.TotalQty : 0,
-                        OnHandQty = onHandQty,
-                        YearlyQty = part.Yearly_Qty ?? 0,
-                        CycleTime = part.Cycle_Time ?? 0,
-                        MonthsInStock = monthsInStock,
-                        PriorityRank = rank
-                    };
-                }).ToList();
+                          let weeklyUsagePercentage = (weeklyQty > 0) ? ((double)tranQty / weeklyQty) * 100 : 0
+
+                          let priorityRank = (weeklyUsagePercentage >= 150) ? 1 :
+                                             (weeklyUsagePercentage >= 100) ? 2 :
+                                             (weeklyUsagePercentage >= 80) ? 3 :
+                                             (weeklyUsagePercentage >= 50) ? 4 :
+                                             5
+
+                          select new FilterSTKCUSViewModel
+                          {
+                              Company = trans?.Company ?? "SSW",
+                              PartNum = sys.PartNum,
+                              TranType = trans?.TranType ?? "N/A",
+                              TotalTranQty = tranQty,
+                              OnHandQty = onHandQty,
+                              YearlyQty = yearlyQty,
+                              WeeklyQty = weeklyQty,
+                              MonthlyQty = monthlyQty,
+                              CycleTime = sys?.Cycle_Time ?? 0,
+                              WeeklyUsagePercentage = weeklyUsagePercentage,
+                              PriorityRank = priorityRank
+                          }).ToList();
             }
             catch (Exception ex)
             {

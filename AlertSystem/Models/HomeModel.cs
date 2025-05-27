@@ -61,14 +61,14 @@ namespace AlertSystem.Models
         public decimal TotalTranQty { get; set; }
         public int OnHandQty { get; set; }
         public decimal YearlyQty { get; set; }
-        public decimal WeeklyQty { get; set; }
-        public decimal MonthlyQty { get; set; }
+        public double WeeklyQty { get; set; }
+        public double MonthlyQty { get; set; }
         public decimal CycleTime { get; set; }
         public double MonthsInStock { get; set; }
         public int PriorityRank { get; set; }
         public decimal Priority_Score { get; set; }
         public double prioritymonth { get; set; }
-        public decimal WeeklyUsagePercentage { get; set; }
+        public double WeeklyUsagePercentage { get; set; }
 
     }
 
@@ -76,6 +76,6 @@ namespace AlertSystem.Models
     {
         public int Priority { get; set; }
         public int TotalParts { get; set; }
+        public List<string> TotalPartsList { get; set; }
     }
-
 }

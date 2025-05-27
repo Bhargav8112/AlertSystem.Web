@@ -30,52 +30,95 @@
             border-radius: 4px;
             text-decoration: none;
         }
-</style>
 
-<div id="loadingGif" style="display:none; text-align: center;">
-    <img src="~/Content/images/loading.gif" alt="Loading..." />
+    #loaderOverlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 9999;
+    }
+
+    .loader-backdrop {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        backdrop-filter: blur(5px);
+        background-color: rgba(255, 255, 255, 0.4);
+    }
+
+    .loader-spinner {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+</style>
+<div id="loaderOverlay" style="display: none;">
+    <div class="loader-backdrop"></div>
+    <div class="loader-spinner">
+        <div class="spinner-border text-primary" role="status" style="width: 4rem; height: 4rem;">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
 </div>
+
 
 <div id="dropdownandradiodiv">
     <div class="card">
         <div class="card-body">
             <div class="row g-3">
-                <center>
-                    <br />
-                    <h2> Shukla Medical Systems</h2>
-                    <div class="col-xl-4 col-md-6">
-                        <input type="hidden" id="dropdwonvalue" value="@Model.Systemname" />
-                        <select class="form-control js-example-basic-single" id="selectedSystem" name="selectedSystem" onchange="filterBySystem(this.value)">
-                            @if (Model.Systemname != null)
-                            {
-                                <option value="@Model.Systemname">@Model.Systemname</option>
-                            }
-                            else
-                            {
-                                <option value="">-- Select System --</option>
-                            }
-                            @foreach (var item in Model.SystemnameList)
-                            {
-                                <option value="@item.SystemNum">@item.SystemNum</option>
-                            }
-                        </select>
+                <br />
+                <center><h2> Shukla Medical Systems</h2></center>
+
+                <div class="">
+                    <input type="hidden" id="dropdwonvalue" value="@Model.Systemname" />
+                    <div id="systemCheckboxList" style="display: flex; flex-wrap: wrap; gap: 15px;">
+                        <div class="form-check">
+                            <input type="checkbox"
+                                   class="form-check-input system-checkbox"
+                                   id="system_all"
+                                   name="selectedSystems"
+                                   value=""
+                                   @(Model.Systemname == null ? "checked" : "")
+                                   onchange="filterBySystem(null)">
+                            <label class="form-check-label" for="system_all">ALL</label>
+                        </div>
+                        @foreach (var item in Model.SystemnameList)
+                        {
+                            <div class="form-check">
+                                <input type="checkbox"
+                                       class="form-check-input system-checkbox"
+                                       id="system_@item.SystemNum"
+                                       name="selectedSystems"
+                                       value="@item.SystemNum"
+                                       @(Model.Systemname == item.SystemNum ? "checked" : "")
+                                       onchange="filterBySystem(this.value)">
+                                <label class="form-check-label" for="system_@item.SystemNum">@item.SystemNum</label>
+                            </div>
+                        }
                     </div>
-                </center>
-                <div id="radioButtons" class="mt-3">
-                    <div class="row">
-                        <div class="col-xl-12">
-                            <div class="form-check form-check-inline me-3">
-                                <input type="radio" class="form-check-input" id="rbtnOnHandQty" name="filterOption" value="onHandQty" onclick="filterOption('onHandQty')" />
-                                <label class="form-check-label" for="rbtnOnHandQty">On Hand Qty</label>
-                            </div>
-                            <div class="form-check form-check-inline me-3">
-                                <input type="radio" class="form-check-input" id="rbtnSTKtoCUS" name="filterOption" value="stkToCus" onclick="filterOption('stkToCus')" />
-                                <label class="form-check-label" for="rbtnSTKtoCUS">STK-CUS</label>
-                            </div>
-                            <div class="form-check form-check-inline me-3">
-                                <input type="radio" class="form-check-input" id="rbtnCycleTime" name="filterOption" value="cycleTime" onclick="filterOption('cycleTime')" />
-                                <label class="form-check-label" for="rbtnCycleTime">Cycle Time</label>
-                            </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <div id="radioButtons" class="mt-3">
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="form-check form-check-inline me-3">
+                            <input type="radio" class="form-check-input" id="rbtnOnHandQty" name="filterOption" value="onHandQty" onclick="filterOption('onHandQty')" />
+                            <label class="form-check-label" for="rbtnOnHandQty">On Hand Qty</label>
+                        </div>
+                        <div class="form-check form-check-inline me-3">
+                            <input type="radio" class="form-check-input" id="rbtnSTKtoCUS" name="filterOption" value="stkToCus" onclick="filterOption('stkToCus')" />
+                            <label class="form-check-label" for="rbtnSTKtoCUS">STK-CUS</label>
+                        </div>
+                        <div class="form-check form-check-inline me-3">
+                            <input type="radio" class="form-check-input" id="rbtnCycleTime" name="filterOption" value="cycleTime" onclick="filterOption('cycleTime')" />
+                            <label class="form-check-label" for="rbtnCycleTime">Cycle Time</label>
                         </div>
                     </div>
                 </div>
@@ -83,8 +126,6 @@
         </div>
     </div>
 </div>
-
-
 <div id="Maintabledata">
     @Html.Partial("_Index", Model)
 </div>
@@ -115,6 +156,7 @@
     <script>
         function filterOption(selectvalue) {
             $("#dropdownandradiodiv").hide();
+            $("#loaderOverlay").show();
             var url = '@Url.Action("OnhandstkcycleFilter", "Home")';
             const systemname = document.getElementById("dropdwonvalue").value;
             $.ajax({
@@ -124,7 +166,12 @@
                 success: function (response) {
                     $('#filterwisedata').html(response);
                 },
+                complete: function () {
+                    // Hide loader after request completes
+                    $("#loaderOverlay").hide();
+                }
             });
+
             $("#Maintabledata").hide();
             $("#filterwisedata").show();
 
@@ -140,19 +187,38 @@
                     },
             });
         }
-        function ShowPrioritymodel() {
+        function ShowPrioritymodel(parts) {
             debugger
-           var selectvalue = null;
-           var url = '@Url.Action("GetPriorityModelData", "Home")';
-             $.ajax({
-             url: url,
-             type: 'GET',
-             data: { selectvalue: selectvalue},
-                 success: function (response) {
-                      $('#PrioriymodePopuplID').html(response);
-                     $('#PrioritymodelID').modal('show');
+            $("#loaderOverlay").show();
+            $('#priorityModal').modal('show');
 
-                 },
+                    const systemname = document.getElementById("dropdwonvalue").value;
+
+            var url = '@Url.Action("GetPriorityModelData", "Home")';
+            let selectedPartNums = parts;
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ systemName: systemname, selectedPartNums: selectedPartNums }),
+                success: function (response) {
+                    $('#PrioriymodePopuplID').html(response);
+                    $('#PrioritymodelID').modal('show');
+
+                    $('#datatablesNEW').DataTable({
+                        paging: true,
+                        searching: true,
+                        responsive: true,
+                        destroy: true // Important: avoid multiple initializations
+                    });
+                },
+                complete: function () {
+                    $("#loaderOverlay").hide();
+                },
+                error: function (xhr) {
+                    console.error("Error fetching data:", xhr.responseText);
+                }
             });
         }
     </script>
