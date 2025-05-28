@@ -95,7 +95,7 @@
             }
             @if (Model.PageNumber < Model.TotalPages)
             {
-                @Html.ActionLink("Next", "Index", new { page = Model.PageNumber + 1 }, new { @class = "btn btn-light" })
+                @Html.ActionLink("Next", "Index", new { page = Model.PageNumber + 1  }, new { @class = "btn btn-light" })
             }
         </div>
     </div>

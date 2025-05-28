@@ -119,6 +119,7 @@ namespace AlertSystem.Controllers
                 //stk to cus
                 else if (selectvalue == "stkToCus")
                 {
+
                     try
                     {
                         result = _homeService.GetSTKCUSData(getSystem, transactionDetails, onHandQtyDict);

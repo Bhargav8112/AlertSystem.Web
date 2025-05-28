@@ -20,255 +20,242 @@
 
 }
 
-<style>
-    .sidebar {
-        height: 100vh; /* Full screen height */
-        padding: 15px;
-        background-color: #f8f9fa;
-        border-right: 1px solid #dee2e6;
-        overflow-y: auto;
-    }
-
-    .content-area {
-        padding: 20px;
-    }
-
-    .sidebar h5 {
-        font-weight: bold;
-        margin-bottom: 15px;
-    }
-
-    .form-check {
-        margin-bottom: 10px;
-    }
-</style>
-<div class="container-fluid">
-    <div class="col-md-3 sidebar">
-        <h5>Shukla Medical Systems</h5>
-        <input type="hidden" id="dropdwonvalue" value="@Model.Systemname" />
-        <div id="systemCheckboxList" style="display: flex; flex-direction: column;">
-            <div class="form-check">
-                <input type="checkbox"
-                       class="form-check-input system-checkbox"
-                       id="system_all"
-                       name="selectedSystems"
-                       value=""
-                       @(Model.Systemname == null ? "checked" : "")
-                       onchange="filterBySystem(null)">
-                <label class="form-check-label" for="system_all">ALL</label>
-            </div>
-            @foreach (var item in Model.SystemnameList)
-            {
-                <div class="form-check">
-                    <input type="checkbox"
-                           class="form-check-input system-checkbox"
-                           id="system_@item.SystemNum"
-                           name="selectedSystems"
-                           value="@item.SystemNum"
-                           @(Model.Systemname == item.SystemNum ? "checked" : "")
-                           onchange="filterBySystem(this.value)">
-                    <label class="form-check-label" for="system_@item.SystemNum">@item.SystemNum</label>
-                </div>
-            }
-        </div>
-    </div>
-    <div class="card">
-        <div class="card-body">
-            <div id="radioButtons" class="mt-3">
-                <div class="row">
-                    <div class="col-xl-12">
-                        <div class="form-check form-check-inline me-3">
-                            <input type="radio" class="form-check-input" id="rbtnOnHandQty" name="filterOption"
-                                   value="onHandQty" onclick="filterOption('onHandQty')"
-                                   @(Model.FilterName == "onHandQty" ? "checked" : "") />
-                            <label class="form-check-label" for="rbtnOnHandQty">On Hand Qty</label>
-                        </div>
-                        <div class="form-check form-check-inline me-3">
-                            <input type="radio" class="form-check-input" id="rbtnSTKtoCUS" name="filterOption"
-                                   value="stkToCus" onclick="filterOption('stkToCus')"
-                                   @(Model.FilterName == "stkToCus" ? "checked" : "") />
-                            <label class="form-check-label" for="rbtnSTKtoCUS">STK-CUS</label>
-                        </div>
-                        <div class="form-check form-check-inline me-3">
-                            <input type="radio" class="form-check-input" id="rbtnCycleTime" name="filterOption"
-                                   value="cycleTime" onclick="filterOption('cycleTime')"
-                                   @(Model.FilterName == "cycleTime" ? "checked" : "") />
-                            <label class="form-check-label" for="rbtnCycleTime">Cycle Time</label>
+<div>
+    <div class="">
+        <div class="row">
+            <div class="col-md-2">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="mb-3">System Filter</h5>
+                        <input type="hidden" id="dropdwonvalue" value="@Model.Systemname" />
+                        <div id="systemCheckboxList" style="display: flex; flex-direction: column; gap: 10px;">
+                            <div class="form-check">
+                                <input type="checkbox"
+                                       class="form-check-input system-checkbox"
+                                       id="system_all"
+                                       name="selectedSystems"
+                                       value=""
+                                       @(Model.Systemname == null ? "checked" : "")
+                                       onchange="filterBySystem(null)">
+                                <label class="form-check-label" for="system_all">ALL</label>
+                            </div>
+                            @foreach (var item in Model.SystemnameList)
+                            {
+                                <div class="form-check">
+                                    <input type="checkbox"
+                                           class="form-check-input system-checkbox"
+                                           id="system_@item.SystemNum"
+                                           name="selectedSystems"
+                                           value="@item.SystemNum"
+                                           @(Model.Systemname == item.SystemNum ? "checked" : "")
+                                           onchange="filterBySystem(this.value)">
+                                    <label class="form-check-label" for="system_@item.SystemNum">@item.SystemNum</label>
+                                </div>
+                            }
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-</div>
-<div id="">
-    <div class="row">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">
-                    @{
-                        int TotalCount = Model.FilterSTKCUSList != null ? Model.FilterSTKCUSList.Count : 0;
-                    }
-                    <h4 class="card-title mb-0"><label id=""> Analysis based on @Model.FilterName </label></h4>
-                </div>
-                <div class="card-body">
-                    <table id="" class="table table-bordered dt-responsive nowrap table-striped align-middle" style="width:100%">
-                        <thead>
-                            <tr>
-                                <th>Sr No.</th>
-                                <th>Part Num</th>
-                                <th>Yearly Qty Should</th>
-                                @if (@Model.FilterName == "stkToCus")
-                                {
-                                    <th>Trans Qty</th>
-                                }
-                                else if (@Model.FilterName == "cycleTime")
-                                {
-                                    <th>FL On Hand Qty</th>
-                                    <th>Trans Qty</th>
-                                }
-                                else
-                                {
-                                    <th>Trans Qty</th>
-                                }
-                                <th>Cycle Time</th>
-                                <th> Priority</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @if (Model.FilterSTKCUSList != null)
-                            {
-                                foreach (var item in Model.FilterSTKCUSList)
-                                {
-                                    <tr>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => count)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.PartNum)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.YearlyQty)
-                                        </td>
-                                        @if (@Model.FilterName == "stkToCus")
-                                        {
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.TotalTranQty)
-                                            </td>
-                                        }
-                                        else if (@Model.FilterName == "cycleTime")
-                                        {
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.OnHandQty)
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.TotalTranQty)
-                                                </td>
-                                        }
-                                        else
-                                        {
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.OnHandQty)
-                                            </td>
-                                        }
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.CycleTime)
-                                        </td>
-                                        <td>
-                                            <b class="btn label-outline-warning"> @Html.DisplayFor(modelItem => item.PriorityRank)</b>
-                                        </td>
-                                    </tr>
-                                    count++;
-                                }
-                            }
-                        </tbody>
-                    </table>
-                    @if (Model.FilterSTKCUSList != null)
-                    {
-                        <div class="d-flex justify-content-between align-items-center mt-3">
-                            @{
-                                var startRecord = ((Model.PageNumber - 1) * Model.PageSize) + 1;
-                                var endRecord = Math.Min(Model.PageNumber * Model.PageSize, Model.TotalItems);
-                            }
-                            <p class="col-lg-6">
-                                Showing @startRecord to @endRecord of @Model.TotalItems entries
-                            </p>
-                            @if (Model.PageNumber > 1)
-                            {
-                                @Html.ActionLink("Previous", "OnhandstkcycleFilter", new { selectvalue = Model.FilterName, slectsystem = Model.Systemname, page = Model.PageNumber - 1 }, new { @class = "btn btn-light" })
-                            }
-                            @for (int i = 1; i <= Math.Min(3, Model.TotalPages); i++)
-                            {
-                                if (i == Model.PageNumber)
-                                {
-                                    <span class="btn btn-primary">@i</span>
-                                }
-                                else
-                                {
-                                    @Html.ActionLink(i.ToString(), "OnhandstkcycleFilter", new { selectvalue = Model.FilterName, slectsystem = Model.Systemname, page = i }, new { @class = "btn btn-light" })
-                                }
-                            }
-                            @if (Model.TotalPages > 5)
-                            {
-                                if (Model.PageNumber < Model.TotalPages - 2)
-                                {
-                                    <span class="btn disabled">...</span>
-                                }
-
-                                for (int i = Model.TotalPages - 1; i <= Model.TotalPages; i++)
-                                {
-                                    if (i > 3)
-                                    {
-                                        if (i == Model.PageNumber)
-                                        {
-                                            <span class="btn btn-primary">@i</span>
-                                        }
-                                        else
-                                        {
-                                            @Html.ActionLink(i.ToString(), "OnhandstkcycleFilter", new { selectvalue = Model.FilterName, slectsystem = Model.Systemname, page = i }, new { @class = "btn btn-light" })
-                                        }
-                                    }
-                                }
-                            }
-                            @if (Model.PageNumber < Model.TotalPages)
-                            {
-                                @Html.ActionLink("Next", "OnhandstkcycleFilter", new { selectvalue = Model.FilterName, slectsystem = Model.Systemname, page = Model.PageNumber + 1 }, new { @class = "btn btn-light" })
-                            }
+            <div class="col-md-10">
+                <div class="card mb-3" id="dropdownandradiodiv">
+                    <div class="card-body">
+                        <div id="radioButtons" class="mt-3">
+                            <div class="row">
+                                <div class="col-xl-12">
+                                    <div class="form-check form-check-inline me-3">
+                                        <input type="radio" class="form-check-input" id="rbtnOnHandQty" name="filterOption"
+                                               value="onHandQty" onclick="filterOption('onHandQty')"
+                                               @(Model.FilterName == "onHandQty" ? "checked" : "") />
+                                        <label class="form-check-label" for="rbtnOnHandQty">On Hand Qty</label>
+                                    </div>
+                                    <div class="form-check form-check-inline me-3">
+                                        <input type="radio" class="form-check-input" id="rbtnSTKtoCUS" name="filterOption"
+                                               value="stkToCus" onclick="filterOption('stkToCus')"
+                                               @(Model.FilterName == "stkToCus" ? "checked" : "") />
+                                        <label class="form-check-label" for="rbtnSTKtoCUS">STK-CUS</label>
+                                    </div>
+                                    <div class="form-check form-check-inline me-3">
+                                        <input type="radio" class="form-check-input" id="rbtnCycleTime" name="filterOption"
+                                               value="cycleTime" onclick="filterOption('cycleTime')"
+                                               @(Model.FilterName == "cycleTime" ? "checked" : "") />
+                                        <label class="form-check-label" for="rbtnCycleTime">Cycle Time</label>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    }
+                    </div>
                 </div>
-            </div>
-        </div>
-        <div class="col-xl-4">
-            <div class="card">
-                <div class="card-header">
-                    <h4 class="card-title mb-0"><label id="lbltotalpriorityforcycletime"> Priority Ranking </label></h4>
-                </div>
-                <div class="card-body">
-                    <table id="tbltotalpartforcycletime" class="table table-bordered dt-responsive nowrap table-striped align-middle" style="width:100%">
-                        <thead>
-                            <tr>
-                                <th>Cycle Time Wise Priority</th>
-                                <th>Total Part</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @if (Model.FilterSTKCUSPriorityList != null)
-                            {
-
-                                foreach (var item in Model.FilterSTKCUSPriorityList)
-                                {
-                                    <tr>
-                                        <td>
-                                            <button type="button" class="btn btn-outline-primary btn-sm fw-bold"onclick='ShowPrioritymodel(@Html.Raw(Json.Encode(item.TotalPartsList)))'>@item.Priority
-                                            </button>
-                                        </td>
-                                        <td> @Html.DisplayFor(modelItem => item.TotalParts)</td>
-                                    </tr>
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-header">
+                                @{
+                                    int TotalCount = Model.FilterSTKCUSList != null ? Model.FilterSTKCUSList.Count : 0;
                                 }
-                            }
-                        </tbody>
-                    </table>
+                                <h4 class="card-title mb-0"><label id=""> Analysis based on @Model.FilterName </label></h4>
+                            </div>
+                            <div class="card-body">
+                                <table id="" class="table table-bordered dt-responsive nowrap table-striped align-middle" style="width:100%">
+                                    <thead>
+                                        <tr>
+                                            <th>Sr No.</th>
+                                            <th>Part Num</th>
+                                            <th>Yearly Qty Should</th>
+                                            @if (@Model.FilterName == "stkToCus")
+                                            {
+                                                <th>Trans Qty</th>
+                                            }
+                                            else if (@Model.FilterName == "cycleTime")
+                                            {
+                                                <th>FL On Hand Qty</th>
+                                                <th>Trans Qty</th>
+                                            }
+                                            else
+                                            {
+                                                <th>Trans Qty</th>
+                                            }
+                                            <th>Cycle Time</th>
+                                            <th> Priority</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @if (Model.FilterSTKCUSList != null)
+                                        {
+                                            foreach (var item in Model.FilterSTKCUSList)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => count)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.PartNum)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.YearlyQty)
+                                                    </td>
+                                                    @if (@Model.FilterName == "stkToCus")
+                                                    {
+                                                        <td>
+                                                            @Html.DisplayFor(modelItem => item.TotalTranQty)
+                                                        </td>
+                                                    }
+                                                    else if (@Model.FilterName == "cycleTime")
+                                                    {
+                                                        <td>
+                                                            @Html.DisplayFor(modelItem => item.OnHandQty)
+                                                        </td>
+                                                        <td>
+                                                            @Html.DisplayFor(modelItem => item.TotalTranQty)
+                                                        </td>
+                                                    }
+                                                    else
+                                                    {
+                                                        <td>
+                                                            @Html.DisplayFor(modelItem => item.OnHandQty)
+                                                        </td>
+                                                    }
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.CycleTime)
+                                                    </td>
+                                                    <td>
+                                                        <b class="btn label-outline-warning"> @Html.DisplayFor(modelItem => item.PriorityRank)</b>
+                                                    </td>
+                                                </tr>
+                                                count++;
+                                            }
+                                        }
+                                    </tbody>
+                                </table>
+                                @if (Model.FilterSTKCUSList != null)
+                                {
+                                    <div class="d-flex justify-content-between align-items-center mt-3">
+                                        @{
+                                            var startRecord = ((Model.PageNumber - 1) * Model.PageSize) + 1;
+                                            var endRecord = Math.Min(Model.PageNumber * Model.PageSize, Model.TotalItems);
+                                        }
+                                        <p class="col-lg-6">
+                                            Showing @startRecord to @endRecord of @Model.TotalItems entries
+                                        </p>
+                                        @if (Model.PageNumber > 1)
+                                        {
+                                            @Html.ActionLink("Previous", "OnhandstkcycleFilter", new { selectvalue = Model.FilterName, slectsystem = Model.Systemname, page = Model.PageNumber - 1 }, new { @class = "btn btn-light" })
+                                        }
+                                        @for (int i = 1; i <= Math.Min(3, Model.TotalPages); i++)
+                                        {
+                                            if (i == Model.PageNumber)
+                                            {
+                                                <span class="btn btn-primary">@i</span>
+                                            }
+                                            else
+                                            {
+                                                @Html.ActionLink(i.ToString(), "OnhandstkcycleFilter", new { selectvalue = Model.FilterName, slectsystem = Model.Systemname, page = i }, new { @class = "btn btn-light" })
+                                            }
+                                        }
+                                        @if (Model.TotalPages > 5)
+                                        {
+                                            if (Model.PageNumber < Model.TotalPages - 2)
+                                            {
+                                                <span class="btn disabled">...</span>
+                                            }
+
+                                            for (int i = Model.TotalPages - 1; i <= Model.TotalPages; i++)
+                                            {
+                                                if (i > 3)
+                                                {
+                                                    if (i == Model.PageNumber)
+                                                    {
+                                                        <span class="btn btn-primary">@i</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        @Html.ActionLink(i.ToString(), "OnhandstkcycleFilter", new { selectvalue = Model.FilterName, slectsystem = Model.Systemname, page = i }, new { @class = "btn btn-light" })
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        @if (Model.PageNumber < Model.TotalPages)
+                                        {
+                                            @Html.ActionLink("Next", "OnhandstkcycleFilter", new { selectvalue = Model.FilterName, slectsystem = Model.Systemname, page = Model.PageNumber + 1 }, new { @class = "btn btn-light" })
+                                        }
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title mb-0"><label id="lbltotalpriorityforcycletime"> Priority Ranking </label></h4>
+                            </div>
+                            <div class="card-body">
+                                <table id="tbltotalpartforcycletime" class="table table-bordered dt-responsive nowrap table-striped align-middle" style="width:100%">
+                                    <thead>
+                                        <tr>
+                                            <th>Cycle Time Wise Priority</th>
+                                            <th>Total Part</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @if (Model.FilterSTKCUSPriorityList != null)
+                                        {
+
+                                            foreach (var item in Model.FilterSTKCUSPriorityList)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        <button type="button" class="btn btn-outline-primary btn-sm fw-bold" onclick='ShowPrioritymodel(@Html.Raw(Json.Encode(item.TotalPartsList)))'>
+                                                            @item.Priority
+                                                        </button>
+                                                    </td>
+                                                    <td> @Html.DisplayFor(modelItem => item.TotalParts)</td>
+                                                </tr>
+                                            }
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
