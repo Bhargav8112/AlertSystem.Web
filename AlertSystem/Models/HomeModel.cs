@@ -14,9 +14,8 @@ namespace AlertSystem.Models
         public List<GetSystwmModel> SystemnameList { get; set; }
         public string Systemname { get; set; }
         public string FilterName { get; set; }
-
+        public string Parttype { get; set; }
         public int TotalPages => (int)Math.Ceiling((decimal)TotalItems / PageSize);
-
         public int? SumOnHandQtyFL { get; set; }
         public int? SumYearlyQty { get; set; }
         public List<FilterSTKCUSViewModel> FilterSTKCUSList { get; set; }
@@ -43,7 +42,12 @@ namespace AlertSystem.Models
         public int? TotalOnHandQtyFL { get; set; }
         public int? TotalYearlyQty { get; set; }
         public decimal? TotalCycleTime { get; set; }
+         
+    
+
+
     }
+ 
 
     public class TransactionSummary
     {
@@ -78,4 +82,10 @@ namespace AlertSystem.Models
         public int TotalParts { get; set; }
         public List<string> TotalPartsList { get; set; }
     }
+    public class PartTypeGroupViewModel
+    {
+        public string PartType { get; set; }
+        public List<string> SystemNames { get; set; }
+    }
+
 }

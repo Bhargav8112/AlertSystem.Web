@@ -3,7 +3,10 @@
 
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var accordionId = "partTypeAccordion";
 }
+
 @section styles{
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" />
@@ -103,13 +106,35 @@
                 </div>
             </div>
 
+
             <!-- Main content -->
             <div class="col-md-9">
+
                 <div class="card mb-3">
                     <div class="card-body">
                         <div id="radioButtons" class="mt-3">
                             <div class="row">
-                                <div class="col-xl-12">
+                                <div class="col">
+
+
+                                    <div class="form-check form-check-inline me-3">
+                                        <input type="radio" class="form-check-input" id="rbtnAssembly" name="filterOption" value="Assembly" @(Model.Parttype == "Assembly" ? "checked" : "") />
+                                        <label class="form-check-label" for="rbtnAssembly">Assembly</label>
+                                    </div>
+                                    <div class="form-check form-check-inline me-3">
+                                        <input type="radio" class="form-check-input" id="rbtnPart" name="filterOption" value="Part" @(Model.Parttype == "Part" ? "checked" : "") />
+                                        <label class="form-check-label" for="rbtnPart">Part</label>
+                                    </div>
+                                    <div class="form-check form-check-inline me-3">
+                                        <input type="radio" class="form-check-input" id="rbtnSubAssembly" name="filterOption" value="Sub Assembly" @(Model.Parttype == "Sub Assembly" ? "checked" : "") />
+                                        <label class="form-check-label" for="rbtnSubAssembly">Sub Assembly</label>
+                                    </div>
+                                    <div class="form-check form-check-inline me-3">
+                                        <input type="radio" class="form-check-input" id="rbtnNotFound" name="filterOption" value="Not Found" @(Model.Parttype == "Not Found" ? "checked" : "") />
+                                        <label class="form-check-label" for="rbtnNotFound">Not Found</label>
+                                    </div>
+                                </div>
+                                <div class="col">
                                     <div class="form-check form-check-inline me-3">
                                         <input type="radio" class="form-check-input" id="rbtnOnHandQty" name="filterOption" value="onHandQty" onclick="filterOption('onHandQty')" />
                                         <label class="form-check-label" for="rbtnOnHandQty">On Hand Qty</label>
@@ -122,7 +147,10 @@
                                         <input type="radio" class="form-check-input" id="rbtnCycleTime" name="filterOption" value="cycleTime" onclick="filterOption('cycleTime')" />
                                         <label class="form-check-label" for="rbtnCycleTime">Cycle Time</label>
                                     </div>
+
                                 </div>
+
+
                             </div>
                         </div>
                     </div>
@@ -137,7 +165,7 @@
             </div>
         </div>
     </div>
-    </div>
+</div>
 
 
 @section scripts{
@@ -160,6 +188,20 @@
     <script src="~/assets/js/app.js"></script>
 
     <script>
+        document.querySelectorAll('input[name="filterOption"]').forEach(function (radio) {
+            radio.addEventListener('change', function () {
+                const parttype = this.value;
+               
+                const urlParams = new URLSearchParams(window.location.search);
+                const selectedSystem = urlParams.get('selectedSystem') || '';
+                const page = urlParams.get('page') || 1;
+          
+
+                // Redirect with both parttype and selectedSystem
+                const url = `/Home/Index?selectedSystem=${encodeURIComponent(selectedSystem)}&page=${page}&parttype=${encodeURIComponent(parttype)}`;
+                window.location.href = url;
+            });
+        });
         function filterOption(selectvalue) {
             $("#dropdownandradiodiv").hide();
             $("#loaderOverlay").show();

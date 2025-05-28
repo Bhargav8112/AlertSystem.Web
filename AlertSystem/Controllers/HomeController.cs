@@ -22,7 +22,7 @@ namespace AlertSystem.Controllers
         ITEIndiaEntities DB = new ITEIndiaEntities();
         SaaS1143_62653Entities EDB = new SaaS1143_62653Entities();
 
-        public ActionResult Index(string selectedSystem, int page = 1)
+        public ActionResult Index(string selectedSystem, string parttype, int page = 1)
         {
             int pageSize = 20;
             HomeModel<PartSummaryViewModel> _Hmodel = new HomeModel<PartSummaryViewModel>();
@@ -35,23 +35,23 @@ namespace AlertSystem.Controllers
                 }
                 List<GetSystwmModel> getSystwm = _homeService.GetSystemsName(null);
 
-                List<PartSummaryViewModel> PartWiseData = (from _model in DB.usp_GetPartSummary(selectedSystem)
-                                      select new PartSummaryViewModel
-                                      {
-                                          PartNum = _model.PartNum,
-                                          TotalOnHandQtyFL = _model.TotalOnHandQtyFL,
-                                          TotalYearlyQty = _model.TotalYearlyQty,
-                                          TotalCycleTime = _model.TotalCycleTime,
-                                      })
+                List<PartSummaryViewModel> PartWiseData = (from _model in DB.usp_GetPartSummary(selectedSystem, parttype)
+                                                           select new PartSummaryViewModel
+                                                           {
+                                                               PartNum = _model.PartNum,
+                                                               TotalOnHandQtyFL = _model.TotalOnHandQtyFL,
+                                                               TotalYearlyQty = _model.TotalYearlyQty,
+                                                               TotalCycleTime = _model.TotalCycleTime,
+                                                           })
                                       .Skip((page - 1) * pageSize)
                                         .Take(pageSize)
                                         .ToList();
 
-                int? SumOnHandQtyFL = DB.usp_GetPartSummary(selectedSystem).Sum(x => x.TotalOnHandQtyFL);
-                int? SumYearlyQty = DB.usp_GetPartSummary(selectedSystem).Sum(x => x.TotalYearlyQty);
+                int? SumOnHandQtyFL = DB.usp_GetPartSummary(selectedSystem, parttype).Sum(x => x.TotalOnHandQtyFL);
+                int? SumYearlyQty = DB.usp_GetPartSummary(selectedSystem, parttype).Sum(x => x.TotalYearlyQty);
 
-               int totalItems = DB.usp_GetPartSummary(selectedSystem).Count();
-
+                int totalItems = DB.usp_GetPartSummary(selectedSystem, parttype).Count();
+             
                 _Hmodel = new HomeModel<PartSummaryViewModel>
                 {
                     Items = PartWiseData,
@@ -61,7 +61,11 @@ namespace AlertSystem.Controllers
                     PageNumber = page,
                     PageSize = pageSize,
                     TotalItems = totalItems,
-                    Systemname = selectedSystem
+                    Systemname = selectedSystem,
+                    Parttype = parttype,
+                    
+
+
                 };
             }
             catch (Exception ex)
@@ -70,6 +74,23 @@ namespace AlertSystem.Controllers
             }
             return View(_Hmodel);
         }
+       public ActionResult PartTypeAccordion()
+        {
+           
+            {
+                var groupedData = DB.Production_System_Name
+                    .GroupBy(p => p.Part_Type)
+                    .Select(g => new PartTypeGroupViewModel
+                    {
+                        PartType = g.Key,
+                        SystemNames = g.Select(x => x.SystemNum).Distinct().ToList()
+                    }).ToList();
+
+                return View(groupedData);
+            }
+        }
+
+
 
         // on hand qty stk to cus and cycle time filter
         public ActionResult OnhandstkcycleFilter(string selectvalue,string slectsystem, int page = 1)
@@ -133,6 +154,18 @@ namespace AlertSystem.Controllers
                 }
                 //cycle time
                 else if (selectvalue == "cycleTime")
+                {
+                    try
+                    {
+                        result = _homeService.GetCycletimeData(getSystem, transactionDetails, onHandQtyDict);
+
+                    }
+                    catch (Exception ex)
+                    {
+                        logService.AddLog(ex, "OnhandstkcycleFilter", "HomeController");
+                    }
+                }
+                else if (selectvalue == "Assembly")
                 {
                     try
                     {

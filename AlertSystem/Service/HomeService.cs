@@ -146,6 +146,7 @@ namespace AlertSystem.Controllers
             return result;
 
         }
+        
 
         public List<FilterSTKCUSViewModel> GetCycletimeData(List<GetSystwmModel> getSystem, List<TransactionSummary> transactionDetails, Dictionary<string, int> onHandQtyDict)
         {

@@ -566,6 +566,7 @@ warning 6002: The table/view 'ITEIndia.sys.database_firewall_rules' does not hav
         </EntityType>
         <Function Name="usp_GetPartSummary" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="SystemNum" Type="nvarchar" Mode="In" />
+          <Parameter Name="PartType" Type="nvarchar" Mode="In" />
         </Function>
         <EntityContainer Name="ITEIndiaModelStoreContainer">
           <EntitySet Name="Prodcution_Report_CNC" EntityType="Self.Prodcution_Report_CNC" Schema="dbo" store:Type="Tables" />
@@ -1223,6 +1224,7 @@ warning 6002: The table/view 'ITEIndia.sys.database_firewall_rules' does not hav
           <EntitySet Name="database_firewall_rules" EntityType="Self.database_firewall_rules" />
           <FunctionImport Name="usp_GetPartSummary" ReturnType="Collection(ITEIndiaModel.usp_GetPartSummary_Result)">
             <Parameter Name="SystemNum" Mode="In" Type="String" />
+            <Parameter Name="PartType" Mode="In" Type="String" />
           </FunctionImport>
         </EntityContainer>
         <ComplexType Name="usp_GetPartSummary_Result">

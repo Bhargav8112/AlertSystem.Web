@@ -48,13 +48,17 @@ namespace AlertSystem.DataBase
         public virtual DbSet<FPA_VIEW> FPA_VIEW { get; set; }
         public virtual DbSet<database_firewall_rules> database_firewall_rules { get; set; }
     
-        public virtual ObjectResult<usp_GetPartSummary_Result> usp_GetPartSummary(string systemNum)
+        public virtual ObjectResult<usp_GetPartSummary_Result> usp_GetPartSummary(string systemNum, string partType)
         {
             var systemNumParameter = systemNum != null ?
                 new ObjectParameter("SystemNum", systemNum) :
                 new ObjectParameter("SystemNum", typeof(string));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<usp_GetPartSummary_Result>("usp_GetPartSummary", systemNumParameter);
+            var partTypeParameter = partType != null ?
+                new ObjectParameter("PartType", partType) :
+                new ObjectParameter("PartType", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<usp_GetPartSummary_Result>("usp_GetPartSummary", systemNumParameter, partTypeParameter);
         }
     }
 }
